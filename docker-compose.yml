@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  account-service:
+    build:
+      context: .
+      dockerfile: services/AccountService/AccountService.API/Dockerfile
+    ports:
+      - "5001:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__Default=Host=account-postgres;Port=5432;Database=AccountDb;Username=postgres;Password=postgres
+    depends_on:
+      - account-postgres
+
+  account-postgres:
+    image: postgres:17
+    container_name: account-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: AccountDb
+    ports:
+      - "5435:5432"
+    volumes:
+      - pgdata_account:/var/lib/postgresql/data
+
+volumes:
+  pgdata_account:
