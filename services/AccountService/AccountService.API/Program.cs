@@ -24,6 +24,12 @@ builder.Services.AddOpenApi(); // or switch to AddEndpointsApiExplorer + AddSwag
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+  var db = scope.ServiceProvider.GetRequiredService<AccountDbContext>();
+  db.Database.Migrate(); // Applies any pending migrations
+}
+
 // Map Swagger only in Development
 if (app.Environment.IsDevelopment())
 {
