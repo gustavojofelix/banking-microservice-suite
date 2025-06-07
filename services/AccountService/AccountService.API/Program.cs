@@ -1,4 +1,14 @@
+using AccountService.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
+
+// --- Configure Services ---
+
+// PostgreSQL connection string from environment or appsettings
+var connectionString = builder.Configuration.GetConnectionString("Default");
+builder.Services.AddDbContext<AccountDbContext>(options =>
+    options.UseNpgsql(connectionString));
 
 // Add Swagger/OpenAPI
 builder.Services.AddOpenApi(); // or switch to AddEndpointsApiExplorer + AddSwaggerGen
